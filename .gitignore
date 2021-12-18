@@ -28,3 +28,4 @@ yarn-error.log*
 # files
 *hide.*
 *copy.*
+*old.*
