@@ -1,0 +1,14 @@
+.contactList {
+  min-width: fit-content;
+  margin: 0;
+  padding: 10px 0px;
+}
+.contactListItem {
+  display: flex;
+  min-width: 400px;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.contactListItem:not(:last-of-type) {
+  margin-bottom: 5px;
+}

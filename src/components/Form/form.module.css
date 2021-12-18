@@ -1,0 +1,8 @@
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+.formInput {
+  margin-bottom: 10px;
+}
