@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { useState, useEffect } from 'react';
 
 import Form from './components/Form/Form';
 import Filter from './components/Filter/Filter';
@@ -7,72 +7,61 @@ import styles from './components/styles.module.css';
 
 import { v4 as uuidv4 } from 'uuid';
 
-export default class App extends Component {
-  state = {
-    contacts: [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
-    filter: '',
-  };
-  addContact = ({ name, number }) => {
-    const { contacts } = this.state;
+export default function App(name, number) {
+  const [contacts, setContacts] = useState([
+    { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+    { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+    { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+    { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+  ]);
+  const [toFilter, setToFilter] = useState('');
+  // const [localStorage, setLocalStorage] = useState('phoneBook', [])
+
+  const addContact = ({ name, number }) => {
     if (contacts.some(contact => contact.name.includes(name))) {
       alert(`${name} is already in contacts!`);
     } else {
-      this.setState({
-        contacts: [...contacts, { name, number, id: uuidv4() }],
-      });
+      setContacts(prevState => [...prevState, { name, number, id: uuidv4() }]);
     }
   };
 
-  deleteContact = contactId => {
-    this.setState(prevState => ({
-      contacts: prevState.contacts.filter(contact => {
-        return contact.id !== contactId;
-      }),
-    }));
-  };
-
-  changeFilter = evt => {
-    this.setState({ filter: evt.currentTarget.value });
-  };
-
-  filterContacts = () => {
-    const { contacts, filter } = this.state;
-    return contacts.filter(contacts =>
-      contacts.name.toLowerCase().includes(filter.toLowerCase()),
+  const deleteContact = contactId => {
+    setContacts(prevState =>
+      prevState.filter(contact => contact.id !== contactId),
     );
   };
 
-  componentDidMount() {
-    const contactsFrmStorage = JSON.parse(localStorage.getItem('phoneBook'));
-    if (contactsFrmStorage) {
-      this.setState({ contacts: contactsFrmStorage });
-    }
-  }
+  const changeFilter = evt => {
+    setToFilter(evt.currentTarget.value);
+  };
 
-  componentDidUpdate(prevState) {
-    const { contacts } = this.state;
-    if (contacts !== prevState.contacts) {
-      localStorage.setItem('phoneBook', JSON.stringify(contacts));
-    }
-  }
-
-  render() {
-    return (
-      <div className={(styles.container, styles.wrapper)}>
-        <h1 className="title">Phonebook</h1>
-        <Form onFormSubmit={this.addContact} />
-        <h2 className="title">Contacts</h2>
-        <Filter onFilterChange={this.changeFilter} toFind={this.filter} />
-        <Contacts
-          onFilter={this.filterContacts()}
-          onDelete={this.deleteContact}
-        />
-      </div>
+  const filterContacts = name => {
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(toFilter.toLowerCase()),
     );
-  }
+  };
+
+  // componentDidMount() {
+  //   const contactsFrmStorage = JSON.parse(window.localStorage.getItem('phoneBook'));
+  //   if (contactsFrmStorage) {
+  //     this.setState({ contacts: contactsFrmStorage });
+  //   }
+  // }
+
+  // componentDidUpdate(prevState) {
+  //   const { contacts } = this.state;
+  //   if (contacts !== prevState.contacts) {
+  //     window.localStorage.setItem('phoneBook', JSON.stringify(contacts));
+  //   }
+  // }
+
+  return (
+    <div className={(styles.container, styles.wrapper)}>
+      <h1 className="title">Phonebook</h1>
+      <Form onFormSubmit={addContact} />
+      <h2 className="title">Contacts</h2>
+      <Filter onFilterChange={changeFilter} toFind={toFilter} />
+      <Contacts onFilter={filterContacts()} onDelete={deleteContact} />
+    </div>
+  );
 }
