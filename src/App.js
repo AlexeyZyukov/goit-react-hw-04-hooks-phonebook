@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import Form from './components/Form/Form';
 import Filter from './components/Filter/Filter';
