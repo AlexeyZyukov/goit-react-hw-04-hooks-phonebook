@@ -3,20 +3,9 @@ import { useState, useEffect } from 'react';
 import Form from './components/Form/Form';
 import Filter from './components/Filter/Filter';
 import Contacts from './components/Contacts/Contacts';
+import useLocalStorage from './components/hooks/useLocalStorage';
 import styles from './components/styles.module.css';
-
 import { v4 as uuidv4 } from 'uuid';
-
-const useLocalStorage = (key, defaultValue) => {
-  const [state, setState] = useState(() => {
-    return JSON.parse(window.localStorage.getItem(key)) ?? defaultValue;
-  });
-
-  useEffect(() => {
-    window.localStorage.setItem(key, JSON.stringify(state));
-  }, [key, state]);
-  return [state, setState];
-};
 
 export default function App() {
   const [contacts, setContacts] = useLocalStorage('contacts', [
